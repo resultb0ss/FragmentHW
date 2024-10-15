@@ -27,6 +27,8 @@
                 android:layout_height="wrap_content"
                 android:text="Заметка"
                 android:background="@null"
+                android:ellipsize="end"
+                android:maxLength="15"
                 android:textSize="18dp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
