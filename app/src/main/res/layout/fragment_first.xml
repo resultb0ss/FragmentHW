@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="4dp"
+    tools:context=".FirstFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="Notes"
+            app:titleTextColor="@color/white"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme">
+
+            <ImageButton
+                android:id="@+id/fragmentExitButtonBTN"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="end"
+                android:src="@drawable/ic_exit_24"
+                android:background="@null"
+                android:layout_marginEnd="8dp"/>
+
+            <ImageButton
+                android:id="@+id/fragmentBackButtonBTN"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="end"
+                android:src="@drawable/ic_back_24"
+                android:background="@null"
+                android:layout_marginEnd="8dp"/>
+
+
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <EditText
+            android:id="@+id/fragmentNameNoteEditTextET"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Введите текст заметки"
+            android:layout_marginTop="16dp"/>
+
+        <Button
+            android:id="@+id/fragmentSaveButtonBTN"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Сохранить"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/fragmentRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            tools:listitem="@layout/item_recycler_view"/>
+
+
+    </LinearLayout>
+
+
+
+
+
+</FrameLayout>
