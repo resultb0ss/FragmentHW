@@ -30,7 +30,7 @@ class CustomAdapter (private val notesList: MutableList<Note>):
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         val note = notesList[position]
-        holder.nameTv.text = note.name
+        holder.nameTv.text = note.date
         holder.dateTv.text = "№${note.id}: ${note.name}"
     }
 
