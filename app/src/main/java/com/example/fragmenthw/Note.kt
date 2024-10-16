@@ -1,8 +1,10 @@
 package com.example.fragmenthw
 
+import java.io.Serializable
+
 class Note (
     val id: Int,
-    val name: String,
+    var name: String,
     val date: String
-) {
+): Serializable {
 }

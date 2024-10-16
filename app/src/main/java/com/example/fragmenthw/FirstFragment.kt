@@ -1,6 +1,7 @@
 package com.example.fragmenthw
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -11,45 +12,43 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.fragmenthw.databinding.FragmentFirstBinding
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Date
 
-class FirstFragment : Fragment() {
+class FirstFragment : Fragment(){
 
     private var noteList: MutableList<Note> = mutableListOf()
+    private lateinit var onFragmentDataListener: OnFragmentDataListener
+    private lateinit var binding: FragmentFirstBinding
 
 
+    @SuppressLint("NotifyDataSetChanged", "SimpleDateFormat")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_first, container, false)
-    }
+    ): View {
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    @SuppressLint("NotifyDataSetChanged", "SimpleDateFormat")
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val noteET: EditText = view.findViewById(R.id.fragmentNameNoteEditTextET)
-        val saveBTN: Button = view.findViewById(R.id.fragmentSaveButtonBTN)
-        val recyclerView: RecyclerView = view.findViewById(R.id.fragmentRecyclerView)
+        binding = FragmentFirstBinding.inflate(inflater,container,false)
+        onFragmentDataListener = requireActivity() as OnFragmentDataListener
 
         val db = DBHelper(requireContext(),null)
-
         noteList = db.getNotes()
 
         var adapter = CustomAdapter(noteList)
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.fragmentRecyclerView.adapter = adapter
+        binding.fragmentRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        saveBTN.setOnClickListener{
 
-            if (noteET.text.isNotEmpty()){
-                val note = noteET.text.toString()
+        binding.fragmentSaveButtonBTN.setOnClickListener{
+
+            if (binding.fragmentNameNoteEditTextET.text.isNotEmpty()){
+                val note = binding.fragmentNameNoteEditTextET.text.toString()
                 val id = noteList.size.plus(1)
                 val date = SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(Date())
                 val noteToDB = Note(id,note,date)
@@ -57,15 +56,28 @@ class FirstFragment : Fragment() {
 
                 noteList = db.getNotes()
                 adapter = CustomAdapter(noteList)
-                recyclerView.adapter = adapter
-                recyclerView.layoutManager = LinearLayoutManager(requireContext())
+                binding.fragmentRecyclerView.adapter = adapter
+                binding.fragmentRecyclerView.layoutManager = LinearLayoutManager(requireContext())
                 adapter.notifyDataSetChanged()
-                noteET.text.clear()
+                binding.fragmentNameNoteEditTextET.text.clear()
 
             } else {
                 Toast.makeText(context, "Заполните поле", Toast.LENGTH_SHORT).show()
             }
         }
+
+//        adapter.setOnNoteClickListener(object : CustomAdapter.OnNoteClickListener {
+//            override fun onNoteClick(note: Note, position: Int) {
+//
+//                onFragmentDataListener.onData(note)
+//            }
+//        })
+
+        return binding.root
     }
 
+    //переопредели на обновление списка
+    override fun onResume() {
+        super.onResume()
+    }
 }

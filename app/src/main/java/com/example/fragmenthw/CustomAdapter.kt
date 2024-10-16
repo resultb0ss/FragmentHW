@@ -3,6 +3,7 @@ package com.example.fragmenthw
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -10,6 +11,11 @@ import androidx.recyclerview.widget.RecyclerView
 class CustomAdapter (private val notesList: MutableList<Note>):
     RecyclerView.Adapter<CustomAdapter.NoteViewHolder>() {
 
+        private var onNoteClickListener: OnNoteClickListener? = null
+
+    interface OnNoteClickListener {
+        fun onNoteClick(note: Note, position: Int)
+    }
 
 
     class NoteViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -32,6 +38,15 @@ class CustomAdapter (private val notesList: MutableList<Note>):
         val note = notesList[position]
         holder.nameTv.text = note.date
         holder.dateTv.text = "№${note.id}: ${note.name}"
+        holder.itemView.setOnClickListener{
+            if (onNoteClickListener != null) {
+                onNoteClickListener!!.onNoteClick(note, position)
+            }
+        }
+    }
+
+    fun setOnNoteClickListener(onNoteClickListener: OnNoteClickListener){
+        this.onNoteClickListener = onNoteClickListener
     }
 
 }
