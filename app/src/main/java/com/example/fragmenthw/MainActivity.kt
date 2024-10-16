@@ -14,8 +14,11 @@ class MainActivity : AppCompatActivity(), OnFragmentDataListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val firstFragment = FirstFragment()
-        supportFragmentManager.beginTransaction().replace(R.id.containerID, firstFragment).commit()
+        if (savedInstanceState == null){
+            val firstFragment = FirstFragment()
+            supportFragmentManager.beginTransaction().replace(R.id.containerID, firstFragment).commit()
+        }
+
 
     }
 

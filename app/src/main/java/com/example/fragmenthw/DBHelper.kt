@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteDatabase.CursorFactory
 import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
+import java.text.SimpleDateFormat
+import java.util.Date
 
 class DBHelper (context: Context, factory: CursorFactory?):
     SQLiteOpenHelper(context, DATABASE_NAME, factory,DATABASE_VERSION ) {
@@ -91,6 +93,20 @@ class DBHelper (context: Context, factory: CursorFactory?):
         contentValues.put(KEY_ID,note.id)
         db.delete(TABLE_NAME,"id=" + note.id, null)
         db.close()
+    }
+
+    fun updateNote(id: Int, newNote: String){
+        val db = this.writableDatabase
+        val selectQuery = "UPDATE $TABLE_NAME SET $KEY_NOTE = '$newNote', $KEY_DATE = 'Изменено ${getTimeNow()}' WHERE id = '$id' "
+        db.execSQL(selectQuery)
+        db.close()
+
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    fun getTimeNow(): String{
+        val datetime = SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(Date())
+        return datetime
     }
 
     override fun onConfigure(db: SQLiteDatabase?) {

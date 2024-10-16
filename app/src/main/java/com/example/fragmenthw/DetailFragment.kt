@@ -9,31 +9,40 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.FragmentTransaction
+import com.example.fragmenthw.databinding.FragmentDetailBinding
 import java.io.Serializable
 
 
 class DetailFragment : Fragment(), OnFragmentDataListener {
 
+    private lateinit var binding: FragmentDetailBinding
     private lateinit var onFragmentDataListener: OnFragmentDataListener
-    private lateinit var editText: EditText
-    private lateinit var saveBTN: Button
 
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         onFragmentDataListener = requireActivity() as OnFragmentDataListener
-        val view = inflater.inflate(R.layout.fragment_detail, container, false)
+        binding = FragmentDetailBinding.inflate(inflater, container, false)
         val note = arguments?.getSerializable("note") as Note
-        editText = view.findViewById(R.id.detailFragmentNoteEditText)
-        saveBTN = view.findViewById(R.id.detailFragmentSaveButtonBTN)
-        saveBTN.setOnClickListener{
-            note.name = editText.text.toString()
+
+        binding.detailFragmentTextViewTitleTV.text = note.name
+
+        binding.detailFragmentSaveButtonBTN.setOnClickListener{
+            val db = DBHelper(requireContext(),null)
+            note.name = binding.detailFragmentNoteEditText.text.toString()
+            var newNote = ""
+            if (binding.detailFragmentNoteEditText.text.isNotEmpty()){
+                newNote = binding.detailFragmentNoteEditText.text.toString()
+            } else {
+                newNote = note.name
+            }
+            db.updateNote(note.id, newNote)
             onData(note)
         }
-        return view
+        return binding.root
     }
 
     override fun onData(note: Note) {

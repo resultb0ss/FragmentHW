@@ -26,6 +26,8 @@ class FirstFragment : Fragment(){
     private var noteList: MutableList<Note> = mutableListOf()
     private lateinit var onFragmentDataListener: OnFragmentDataListener
     private lateinit var binding: FragmentFirstBinding
+    private lateinit var adapter: CustomAdapter
+    private lateinit var db: DBHelper
 
 
     @SuppressLint("NotifyDataSetChanged", "SimpleDateFormat")
@@ -37,10 +39,10 @@ class FirstFragment : Fragment(){
         binding = FragmentFirstBinding.inflate(inflater,container,false)
         onFragmentDataListener = requireActivity() as OnFragmentDataListener
 
-        val db = DBHelper(requireContext(),null)
+        db = DBHelper(requireContext(),null)
         noteList = db.getNotes()
 
-        var adapter = CustomAdapter(noteList)
+        adapter = CustomAdapter(noteList)
         binding.fragmentRecyclerView.adapter = adapter
         binding.fragmentRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -50,14 +52,11 @@ class FirstFragment : Fragment(){
             if (binding.fragmentNameNoteEditTextET.text.isNotEmpty()){
                 val note = binding.fragmentNameNoteEditTextET.text.toString()
                 val id = noteList.size.plus(1)
-                val date = SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(Date())
-                val noteToDB = Note(id,note,date)
+                val noteToDB = Note(id,note,getTimeNow())
                 db.addNote(noteToDB)
 
-                noteList = db.getNotes()
-                adapter = CustomAdapter(noteList)
-                binding.fragmentRecyclerView.adapter = adapter
-                binding.fragmentRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+                val newNoteList = db.getNotes()
+                adapter.updateData(newNoteList)
                 adapter.notifyDataSetChanged()
                 binding.fragmentNameNoteEditTextET.text.clear()
 
@@ -66,18 +65,28 @@ class FirstFragment : Fragment(){
             }
         }
 
-//        adapter.setOnNoteClickListener(object : CustomAdapter.OnNoteClickListener {
-//            override fun onNoteClick(note: Note, position: Int) {
-//
-//                onFragmentDataListener.onData(note)
-//            }
-//        })
+        adapter.setOnNoteClickListener(object : CustomAdapter.OnNoteClickListener {
+            override fun onNoteClick(note: Note, position: Int) {
+                onFragmentDataListener.onData(note)
+            }
+        })
 
         return binding.root
     }
 
-    //переопредели на обновление списка
+    @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {
         super.onResume()
+        val newNotes = db.getNotes()
+        adapter.updateData(newNotes)
+        adapter.notifyDataSetChanged()
+
     }
+
+    @SuppressLint("SimpleDateFormat")
+    fun getTimeNow(): String{
+        val datetime = SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(Date())
+        return datetime
+    }
+
 }

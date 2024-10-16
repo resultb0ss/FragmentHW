@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class CustomAdapter (private val notesList: MutableList<Note>):
+class CustomAdapter (private var notesList: MutableList<Note>):
     RecyclerView.Adapter<CustomAdapter.NoteViewHolder>() {
 
         private var onNoteClickListener: OnNoteClickListener? = null
@@ -47,6 +47,10 @@ class CustomAdapter (private val notesList: MutableList<Note>):
 
     fun setOnNoteClickListener(onNoteClickListener: OnNoteClickListener){
         this.onNoteClickListener = onNoteClickListener
+    }
+
+    fun updateData(newNoteList: MutableList<Note>) {
+        notesList = newNoteList
     }
 
 }
